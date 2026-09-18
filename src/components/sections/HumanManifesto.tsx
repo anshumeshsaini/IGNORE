@@ -2,6 +2,50 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import studioCraftImg from "@/assets/studio-craft.jpg";
 import { sounds } from "@/lib/sound";
 
+// Generate a static noise texture once on client (SSR-safe)
+function generateNoiseSrc(): string {
+  try {
+    const canvas = document.createElement("canvas");
+    canvas.width = 180;
+    canvas.height = 180;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "";
+    const imageData = ctx.createImageData(180, 180);
+    const data = imageData.data;
+    for (let i = 0; i < data.length; i += 4) {
+      const v = Math.floor(Math.random() * 255);
+      data[i] = data[i + 1] = data[i + 2] = v;
+      data[i + 3] = 22;
+    }
+    ctx.putImageData(imageData, 0, 0);
+    return canvas.toDataURL();
+  } catch {
+    return "";
+  }
+}
+
+// Shared noise src — generated once after first mount, reused for all cards
+let cachedNoiseSrc = "";
+
+function NoiseOverlay() {
+  const [src, setSrc] = useState("");
+  useEffect(() => {
+    if (!cachedNoiseSrc) cachedNoiseSrc = generateNoiseSrc();
+    setSrc(cachedNoiseSrc);
+  }, []);
+  if (!src) return null;
+  return (
+    <img
+      src={src}
+      className="pointer-events-none absolute inset-0 size-full opacity-25 mix-blend-overlay select-none"
+      aria-hidden="true"
+      style={{ objectFit: "cover" }}
+      draggable={false}
+      alt=""
+    />
+  );
+}
+
 interface Principle {
   id: string;
   number: string;
@@ -108,63 +152,17 @@ function GlitchText({ children, active }: { children: string; active: boolean })
   return <span data-text={children}>{scrambled}</span>;
 }
 
-// Animated noise canvas for card background
-function NoiseCanvas({ color }: { color: string }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animId: number;
-    const draw = () => {
-      const { width, height } = canvas;
-      const imageData = ctx.createImageData(width, height);
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        const v = Math.random() * 255;
-        data[i] = v;
-        data[i + 1] = v;
-        data[i + 2] = v;
-        data[i + 3] = 18;
-      }
-      ctx.putImageData(imageData, 0, 0);
-      animId = requestAnimationFrame(draw);
-    };
-
-    draw();
-    return () => cancelAnimationFrame(animId);
-  }, []);
-
-  return (
-    <canvas
-      ref={canvasRef}
-      width={120}
-      height={120}
-      className="pointer-events-none absolute inset-0 size-full opacity-30 mix-blend-overlay"
-      aria-hidden="true"
-    />
-  );
-}
 
 export function HumanManifesto() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [scanY, setScanY] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const leftSquareRef = useRef<HTMLDivElement>(null);
 
   const active = PRINCIPLES[activeIdx]!;
 
-  // Scan line animation
-  useEffect(() => {
-    const id = window.setInterval(() => {
-      setScanY((p) => (p >= 100 ? 0 : p + 0.8));
-    }, 20);
-    return () => clearInterval(id);
-  }, []);
+  // Scan line: use CSS animation to avoid JS timer overhead
+  // (scanY state removed — CSS @keyframes "scan-y" in the component)
 
   // Mouse tracking for left square parallax
   const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -266,18 +264,24 @@ export function HumanManifesto() {
             {/* Dark overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-black/20" />
 
-            {/* Scan line */}
+            {/* Scan line — CSS animated for GPU compositing */}
             <div
               className="pointer-events-none absolute left-0 right-0 z-20 h-px"
               style={{
-                top: `${scanY}%`,
                 background: `linear-gradient(to right, transparent, ${active.colorVar}, transparent)`,
                 boxShadow: `0 0 12px ${active.colorVar}`,
                 opacity: 0.7,
                 transition: "background 0.5s ease",
+                animation: "scan-line-y 4s linear infinite",
               }}
               aria-hidden="true"
             />
+            <style>{`
+              @keyframes scan-line-y {
+                0%   { top: 0%; }
+                100% { top: 100%; }
+              }
+            `}</style>
 
             {/* Dynamic spotlight from mouse */}
             <div
@@ -427,7 +431,7 @@ export function HumanManifesto() {
                   }}
                 >
                   {/* Noise texture */}
-                  <NoiseCanvas color={p.colorVar} />
+                  <NoiseOverlay />
 
                   {/* Top row */}
                   <div className="relative z-10 flex items-center justify-between mb-3">

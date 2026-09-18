@@ -35,7 +35,7 @@ export function CanvasHeroBackdrop() {
     let animationFrameId = 0;
     const mouse = { x: -1000, y: -1000, targetX: -1000, targetY: -1000, active: false };
 
-    const particleCount = Math.min(Math.floor((width * height) / 14000), 75);
+    const particleCount = Math.min(Math.floor((width * height) / 18000), 55);
     const particles: Particle[] = [];
 
     const palette = [
@@ -192,8 +192,6 @@ export function CanvasHeroBackdrop() {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = `rgba(${p.color}, 0.8)`;
         ctx.fill();
         ctx.restore();
 
@@ -235,6 +233,7 @@ export function CanvasHeroBackdrop() {
     <canvas
       ref={canvasRef}
       className="pointer-events-auto absolute inset-0 z-0 size-full opacity-70"
+      style={{ willChange: "transform" }}
       aria-hidden="true"
     />
   );

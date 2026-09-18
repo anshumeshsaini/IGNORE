@@ -67,11 +67,11 @@ function CaseStudy() {
 
         <div className="relative aspect-[16/9] w-full overflow-hidden bg-muted">
           <img
-            src={project.image}
+            src={hero}
             alt={`${project.name} key visual`}
-            className="size-full object-cover"
+            className="size-full object-cover grayscale"
           />
-          <span className="display pointer-events-none absolute bottom-4 left-4 text-[12vw] leading-none text-acid/80 drop-shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+          <span className="display pointer-events-none absolute bottom-4 left-4 text-[12vw] leading-none text-acid/70 mix-blend-difference">
             {project.accentWord}
           </span>
         </div>
@@ -94,12 +94,12 @@ function CaseStudy() {
               <Reveal className="md:col-span-7 md:[direction:ltr]">
                 <p className="max-w-xl text-lg leading-relaxed text-foreground/80">{c.body}</p>
                 {i % 2 === 1 && (
-                  <div className="mt-8 aspect-[16/10] overflow-hidden rounded-2xl border border-white/10 bg-muted">
+                  <div className="mt-8 aspect-[4/3] overflow-hidden bg-muted">
                     <img
-                      src={project.image}
+                      src={imgs[(i + 1) % imgs.length]}
                       alt={`${project.name} — ${c.title}`}
                       loading="lazy"
-                      className="size-full object-cover"
+                      className="size-full object-cover grayscale"
                     />
                   </div>
                 )}
@@ -108,7 +108,7 @@ function CaseStudy() {
           ))}
 
           <section className="py-[10vh]">
-            <p className="eyebrow text-acid">(VERIFIED CAMPAIGN OUTCOMES)</p>
+            <p className="eyebrow text-muted-foreground">(RESULTS — DEMO PLACEHOLDERS)</p>
             <dl className="mt-8 grid gap-10 md:grid-cols-3">
               {project.results.map((r) => (
                 <div key={r.label}>

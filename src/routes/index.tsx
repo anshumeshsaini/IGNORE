@@ -5,7 +5,6 @@ import { Stats } from "@/components/sections/Stats";
 import { Comeback } from "@/components/sections/Comeback";
 import { ServicesList } from "@/components/sections/ServicesList";
 import { WorkPreview } from "@/components/sections/WorkPreview";
-import { HumanManifesto } from "@/components/sections/HumanManifesto";
 import { AboutBlock } from "@/components/sections/AboutBlock";
 import { VideoSection } from "@/components/sections/VideoSection";
 import { Testimonials } from "@/components/sections/Testimonials";
@@ -14,7 +13,7 @@ import { Newsletter } from "@/components/sections/Newsletter";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { site } from "@/lib/site";
 
-const title = `${site.name} — Extreme Human-Crafted Creative & Performance Studio`;
+const title = `${site.name} — We make brands impossible to ignore`;
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -36,11 +35,10 @@ function Index() {
     <SiteFrame>
       <h1 className="sr-only">{site.name} — creative and performance studio</h1>
       <Hero />
-
+      <Stats />
       <Comeback />
       <ServicesList />
-
-      <HumanManifesto />
+      <WorkPreview />
       <VideoSection />
       <AboutBlock />
       <Testimonials />

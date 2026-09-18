@@ -1,13 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteFrame } from "@/components/SiteFrame";
 import { AboutBlock } from "@/components/sections/AboutBlock";
-import { HumanManifesto } from "@/components/sections/HumanManifesto";
 import { Stats } from "@/components/sections/Stats";
 import { Marquee } from "@/components/sections/Marquee";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { SplitLines } from "@/components/Reveal";
 
-const title = "About Atelier — UNIGNORABLE";
+const title = "About — UNIGNORABLE";
 const description =
   "An independent studio of strategists, designers, developers, media buyers and storytellers turning attention into business.";
 
@@ -30,7 +29,7 @@ function AboutPage() {
   return (
     <SiteFrame>
       <header className="edge pb-[4vh] pt-[24vh]">
-        <p className="eyebrow text-acid">(THE ATELIER MANIFESTO)</p>
+        <p className="eyebrow text-muted-foreground">(THE STUDIO)</p>
         <h1 className="sr-only">About</h1>
         <SplitLines
           text={"TURNING ATTENTION\nINTO BUSINESS."}
@@ -38,7 +37,6 @@ function AboutPage() {
         />
       </header>
       <AboutBlock />
-      <HumanManifesto />
       <Stats />
       <Marquee />
       <FinalCTA />
