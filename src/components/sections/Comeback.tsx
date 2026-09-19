@@ -68,6 +68,7 @@ export function Comeback() {
   }, []);
 
   return (
+    <div>
     <section
       ref={ref}
       aria-label="Our point of view"
@@ -105,5 +106,6 @@ export function Comeback() {
         WE CREATE IT.
       </p>
     </section>
+    </div>
   );
 }

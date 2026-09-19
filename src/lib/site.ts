@@ -1,8 +1,8 @@
 export const site = {
   name: "UNIGNORABLE",
-  tagline: "We make brands impossible to ignore.",
+  tagline: "WE MAKE BRANDS HARD TO IGNORE.",
   description:
-    "Independent creative and performance studio. Strategy, media, film and product — built to be remembered.",
+    "Independent creative & performance marketing studio across India, UAE, and Global. Creative, Strategy, Performance, Branding, Digital, and Technology.",
   email: "hello@unignorable.studio",
   phone: "+91 90000 00000",
   whatsappNumber: "919000000000",
@@ -14,7 +14,7 @@ export const site = {
 } as const;
 
 export const whatsappLink = (
-  message = "Hi — I'd like to start a project.",
+  message = "Hi UNIGNORABLE — I'd like to start a project.",
 ): string => `https://wa.me/${site.whatsappNumber}?text=${encodeURIComponent(message)}`;
 
 export const mailtoLink = (subject = "New project enquiry"): string =>
@@ -23,15 +23,14 @@ export const mailtoLink = (subject = "New project enquiry"): string =>
 export const BUDGETS = [
   "₹25K–₹50K",
   "₹50K–₹1L",
-  "₹1L–₹3L",
-  "₹3L+",
-  "Not Sure Yet",
+  "₹1L–₹2L",
+  "₹2L+",
 ] as const;
 
 export const TIMELINES = [
-  "ASAP",
+  "Immediately / ASAP",
   "Within 1 Month",
   "1–3 Months",
-  "3+ Months",
-  "Just Exploring",
+  "Strategic Retainer",
 ] as const;
+

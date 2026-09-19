@@ -163,12 +163,30 @@
   to { transform: translateX(110%); }
 }
 
+@keyframes signal-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes marquee-ltr {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes marquee-rtl {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
 .campaign-drift {
   animation: campaign-drift 12s ease-in-out infinite;
 }
 
 .signal-scan {
   animation: signal-scan 5s cubic-bezier(0.76, 0, 0.24, 1) infinite;
+}
+.signal-marquee {
+  animation: signal-marquee 24s linear infinite;
 }
 .fluid-md {
   font-size: clamp(1.8rem, 5vw, 4rem);

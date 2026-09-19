@@ -1,134 +1,272 @@
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
+import campaignChrome from "@/assets/campaign-chrome.jpg";
 import campaignGlass from "@/assets/campaign-glass.jpg";
-import campaignProfile from "@/assets/campaign-profile.jpg";
 import { Magnetic } from "../Magnetic";
+import { HeroChromeSculpture } from "../HeroChromeSculpture";
 import { useGsapContext } from "@/hooks/useGsapContext";
 import { site } from "@/lib/site";
 
-const LINES = ["WE MAKE", "BRANDS", "HARD TO", "IGNORE."];
-
 export function Hero() {
-  const bg = useRef<HTMLDivElement>(null);
+  const heroRoot = useRef<HTMLElement>(null);
+  const typographyRef = useRef<HTMLDivElement>(null);
+  const mediaRef = useRef<HTMLDivElement>(null);
 
-  const ref = useGsapContext<HTMLElement>(({ gsap, root }) => {
-    const tl = gsap.timeline({ delay: 1.15 });
-    tl.from(root.querySelectorAll("[data-hero-line]"), {
-      yPercent: 120,
-      duration: 1.2,
+  useGsapContext<HTMLElement>(({ gsap, root }) => {
+    const lines = root.querySelectorAll("[data-hero-line]");
+    const metas = root.querySelectorAll("[data-hero-meta]");
+    const ctas = root.querySelectorAll("[data-hero-cta]");
+    const media = root.querySelector("[data-hero-media]");
+
+    const tl = gsap.timeline({ delay: 0.3 });
+
+    // Entrance timeline
+    tl.from(lines, {
+      yPercent: 130,
+      rotateX: -35,
       stagger: 0.08,
+      duration: 1.3,
       ease: "power4.out",
     })
       .from(
-        root.querySelectorAll("[data-hero-meta]"),
-        { opacity: 0, y: 20, duration: 0.8, stagger: 0.08, ease: "power2.out" },
+        metas,
+        {
+          opacity: 0,
+          y: 24,
+          duration: 0.9,
+          stagger: 0.06,
+          ease: "power3.out",
+        },
+        "-=0.8",
+      )
+      .from(
+        ctas,
+        {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power3.out",
+        },
         "-=0.7",
       )
-      .from(root.querySelector("[data-hero-media]"), { scale: 1.18, duration: 2, ease: "power3.out" }, 0);
+      .from(
+        media,
+        {
+          scale: 1.25,
+          opacity: 0,
+          duration: 1.8,
+          ease: "power3.out",
+        },
+        0,
+      );
 
-    gsap.to(root.querySelector("[data-hero-media]"), {
-      yPercent: 18,
+    // Scroll parallax & velocity reactions
+    gsap.to(media, {
+      yPercent: 24,
+      scale: 1.08,
       ease: "none",
-      scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: {
+        trigger: root,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
     });
-    gsap.to(root.querySelector("[data-hero-copy]"), {
-      yPercent: -14,
-      opacity: 0.2,
+
+    gsap.to(typographyRef.current, {
+      yPercent: -18,
+      opacity: 0.15,
       ease: "none",
-      scrollTrigger: { trigger: root, start: "top top", end: "bottom top", scrub: true },
+      scrollTrigger: {
+        trigger: root,
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
     });
   }, []);
 
-  // mouse-responsive drift on the background
+  // Kinetic cursor reactivity & velocity tilt
   useEffect(() => {
-    const el = bg.current;
-    if (!el || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-    const onMove = (e: PointerEvent) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 24;
-      const y = (e.clientY / window.innerHeight - 0.5) * 24;
-      el.style.transform = `translate3d(${x}px, ${y}px, 0) scale(1.06)`;
+    const typo = typographyRef.current;
+    if (!typo || !window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId = 0;
+
+    const onPointerMove = (e: PointerEvent) => {
+      const { innerWidth, innerHeight } = window;
+      targetX = ((e.clientX / innerWidth) - 0.5) * 36;
+      targetY = ((e.clientY / innerHeight) - 0.5) * 26;
     };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => window.removeEventListener("pointermove", onMove);
+
+    const loop = () => {
+      currentX += (targetX - currentX) * 0.08;
+      currentY += (targetY - currentY) * 0.08;
+      typo.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) rotateY(${currentX * 0.25}deg) rotateX(${-currentY * 0.25}deg)`;
+      rafId = requestAnimationFrame(loop);
+    };
+
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    rafId = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove);
+      cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (
-    <section ref={ref} className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-8 pt-28 md:pb-12">
-      <div data-hero-media className="absolute inset-0 -z-10">
-        <div ref={bg} className="absolute inset-0 transition-transform duration-[900ms] ease-out">
-          <img
-            src={campaignProfile}
-            alt="Iridescent sculptural portrait from an UNIGNORABLE campaign"
-            width={1024}
-            height={1280}
-            fetchPriority="high"
-            className="campaign-drift size-full object-cover object-[68%_center] opacity-90 md:object-center"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/70 to-ink/10" />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/45" />
+    <section
+      ref={heroRoot}
+      className="relative flex min-h-[100svh] flex-col justify-between overflow-hidden bg-[#09090b] pt-24 md:pt-32 pb-10"
+    >
+      {/* Interactive WebGL Liquid Chrome Sculpture */}
+      <HeroChromeSculpture />
+
+      {/* Layered cinematic campaign background with grain & depth */}
+      <div data-hero-media ref={mediaRef} className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <img
+          src={campaignChrome}
+          alt="UNIGNORABLE Signature Chrome Object"
+          width={1920}
+          height={1080}
+          fetchPriority="high"
+          className="size-full object-cover object-center opacity-30 mix-blend-luminosity filter blur-[1px] md:opacity-35"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#09090b] via-[#09090b]/60 to-[#09090b]/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#09090b] via-transparent to-[#09090b]/90" />
       </div>
 
-      <div className="edge relative grid items-end gap-8 lg:grid-cols-12">
-        <div className="lg:col-span-9">
-        <div className="flex flex-wrap items-end justify-between gap-6 pb-6">
-          <p data-hero-meta className="eyebrow text-acid">
-            <span className="mr-3 inline-block h-px w-10 bg-acid align-middle" /> CREATIVE / STRATEGY / PERFORMANCE
-          </p>
-          <p data-hero-meta className="eyebrow text-foreground/60 lg:hidden">
-            {site.locations.join(" / ")}
-          </p>
-        </div>
+      {/* Top manifesto signals */}
 
-        <h1 data-hero-copy className="display fluid-xl max-w-[9ch]">
-          {LINES.map((line, i) => (
-            <span key={line} className="block overflow-hidden">
-              <span data-hero-line className={`block ${i === 1 ? "ml-[0.45em] text-transparent [-webkit-text-stroke:1px_var(--bone)]" : ""} ${i === 3 ? "text-acid" : ""}`}>
-                {line}
-              </span>
-            </span>
-          ))}
-        </h1>
-
-        <div className="mt-10 flex flex-wrap items-center gap-4 md:gap-8">
-          <Magnetic strength={0.4}>
-            <Link
-              to="/contact"
-              data-cursor="cta"
-              className="eyebrow inline-flex items-center gap-2 bg-acid px-8 py-4 text-acid-foreground transition-colors hover:bg-foreground"
+      {/* Center: Massive reactive typography */}
+      <div className="edge relative z-10 my-auto py-10 md:py-16">
+        <div className="grid items-end gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-9">
+            <div
+              ref={typographyRef}
+              className="will-change-transform"
+              style={{ perspective: 1200 }}
             >
-              START A PROJECT <ArrowUpRight className="size-4" aria-hidden="true" />
-            </Link>
-          </Magnetic>
-          <Link
-            to="/work"
-            data-cursor="cta"
-            className="eyebrow link-underline inline-flex items-center gap-2 text-foreground/80"
-          >
-            EXPLORE OUR WORK <ArrowDown className="size-4" aria-hidden="true" />
-          </Link>
-        </div>
-        <div data-hero-meta className="mt-10 flex items-center gap-3 text-muted-foreground">
-          <span className="eyebrow">SCROLL</span>
-          <span className="h-px w-16 bg-border" />
-          <ArrowDown className="size-3 animate-bounce" aria-hidden="true" />
-        </div>
-        </div>
+              <h1 className="display fluid-xl max-w-[12ch] font-bold tracking-[-0.04em]">
+                {/* Line 1 */}
+                <span className="block overflow-hidden">
+                  <span data-hero-line className="block text-foreground">
+                    WE MAKE
+                  </span>
+                </span>
 
-        <aside data-hero-meta className="relative hidden self-end lg:col-span-3 lg:block">
-          <div className="relative ml-auto w-[min(22vw,280px)] border border-foreground/20 bg-bone p-3 text-ink shadow-2xl transition-transform duration-500 hover:-translate-y-3">
-            <div className="aspect-[4/3] overflow-hidden bg-muted">
-              <img src={campaignGlass} alt="Acid glass campaign artwork" width={1024} height={1280} className="size-full object-cover transition-transform duration-700 hover:scale-110" />
+                {/* Line 2: Cutout / tactile stroke */}
+                <span className="block overflow-hidden">
+                  <span
+                    data-hero-line
+                    className="block text-transparent [-webkit-text-stroke:1.5px_var(--bone)] transition-colors duration-500 hover:text-bone hover:[-webkit-text-stroke:0px]"
+                  >
+                    BRANDS
+                  </span>
+                </span>
+
+                {/* Line 3 & 4 */}
+                <span className="block overflow-hidden">
+                  <span data-hero-line className="block text-foreground">
+                    HARD TO
+                  </span>
+                </span>
+                <span className="block overflow-hidden">
+                  <span data-hero-line className="block text-acid">
+                    IGNORE.
+                  </span>
+                </span>
+              </h1>
             </div>
-            <p className="eyebrow mt-4 text-signal">FEATURED / 01</p>
-            <p className="display mt-1 text-3xl leading-none">ATTENTION, ART DIRECTED.</p>
-            <ArrowUpRight className="absolute -right-3 -top-3 size-9 bg-signal p-2 text-bone" aria-hidden="true" />
+
+            {/* Strategic descriptor & buttons */}
+            <div className="mt-10 flex flex-wrap items-center gap-6 md:gap-10">
+              <Magnetic strength={0.35}>
+                <Link
+                  to="/contact"
+                  data-hero-cta
+                  data-cursor="cta"
+                  className="eyebrow group relative inline-flex items-center gap-3 overflow-hidden bg-acid px-8 py-4 font-mono font-bold text-ink shadow-[0_0_25px_rgba(204,255,0,0.25)] transition-all duration-300 hover:bg-foreground hover:text-ink"
+                >
+                  <span className="relative z-10 flex items-center gap-2">
+                    START A PROJECT
+                    <ArrowUpRight className="size-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </span>
+                  <div className="absolute inset-0 -translate-x-full bg-foreground transition-transform duration-300 ease-out group-hover:translate-x-0" />
+                </Link>
+              </Magnetic>
+
+              <Magnetic strength={0.25}>
+                <a
+                  href="#work-section"
+                  data-hero-cta
+                  data-cursor="view"
+                  className="eyebrow link-underline group inline-flex items-center gap-2 font-mono text-foreground/80 transition-colors hover:text-acid"
+                >
+                  <span>EXPLORE OUR WORK</span>
+                  <ArrowDown className="size-4 transition-transform duration-300 group-hover:translate-y-1" />
+                </a>
+              </Magnetic>
+            </div>
           </div>
-          <p className="eyebrow mt-5 text-right text-foreground/60">{site.locations.join(" / ")}</p>
-        </aside>
+
+          {/* Right: Signature Floating Campaign Artifact */}
+          <aside
+            data-hero-meta
+            className="relative hidden self-end lg:col-span-3 lg:block"
+          >
+            <div className="group relative ml-auto w-[min(22vw,280px)] border border-border/80 bg-ink/90 p-3 shadow-2xl backdrop-blur-md transition-all duration-700 hover:-translate-y-3 hover:border-acid">
+              <div className="relative aspect-[4/5] overflow-hidden bg-muted">
+                <img
+                  src={campaignGlass}
+                  alt="Acid Glass Editorial Study"
+                  width={600}
+                  height={800}
+                  className="size-full object-cover saturate-[0.8] transition-transform duration-700 group-hover:scale-110 group-hover:saturate-100"
+                />
+                <span className="eyebrow absolute left-2 top-2 bg-ink/80 px-2 py-1 text-[9px] text-acid">
+                  ARCHIVE // 01
+                </span>
+              </div>
+              <div className="mt-3 flex items-baseline justify-between">
+                <div>
+                  <p className="eyebrow text-xs text-acid">ATTENTION ARCHITECTURE</p>
+                  <p className="display mt-1 text-2xl leading-none text-foreground">
+                    CULTURE × METRICS
+                  </p>
+                </div>
+                <ArrowUpRight className="size-4 text-foreground/40 transition-colors group-hover:text-acid" />
+              </div>
+            </div>
+            <p className="eyebrow mt-4 text-right font-mono text-[10px] text-foreground/40">
+              {site.locations.join(" • ")}
+            </p>
+          </aside>
+        </div>
       </div>
-      <div aria-hidden="true" className="signal-scan absolute bottom-0 h-1 w-1/2 bg-signal" />
+
+      {/* Bottom ticker bar */}
+      <div className="edge relative z-10 flex items-center justify-between border-t border-border/40 pt-4 text-muted-foreground">
+        <div data-hero-meta className="flex items-center gap-4">
+          <span className="eyebrow font-mono text-[10px] text-acid">SYSTEM STATUS</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-acid animate-pulse" />
+          <span className="eyebrow font-mono text-[10px] text-foreground/60">DEPLOYED GLOBALLY</span>
+        </div>
+        <div data-hero-meta className="flex items-center gap-2 font-mono text-[10px] text-foreground/40">
+          <span>COORDINATES:</span>
+          <span>19.0760° N, 72.8777° E</span>
+        </div>
+      </div>
+
+      {/* Scanning laser line at bottom */}
+      <div aria-hidden="true" className="signal-scan absolute bottom-0 h-0.5 w-1/3 bg-acid shadow-[0_0_12px_var(--acid)]" />
     </section>
   );
 }
