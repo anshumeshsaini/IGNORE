@@ -72,11 +72,11 @@ export function Comeback() {
     <section
       ref={ref}
       aria-label="Our point of view"
-      className="relative flex h-[100svh] items-center justify-center overflow-hidden bg-ink"
+      className="relative flex h-[100svh] items-center justify-center overflow-hidden bg-acid text-acid-foreground"
     >
-      <div data-flash className="pointer-events-none absolute inset-0 bg-acid opacity-0" aria-hidden="true" />
+      <div data-flash className="pointer-events-none absolute inset-0 bg-signal opacity-0" aria-hidden="true" />
 
-      <p data-ready className="eyebrow absolute text-acid">
+      <p data-ready className="eyebrow absolute text-acid-foreground">
         READY?
       </p>
 
@@ -85,7 +85,7 @@ export function Comeback() {
           <span
             key={w}
             data-word
-            className="display absolute text-[6vw] text-foreground/25"
+            className="display absolute text-[6vw] text-acid-foreground/25"
             style={{
               left: `${(i * 13 + 8) % 80}%`,
               top: `${(i * 29 + 12) % 78}%`,
@@ -102,7 +102,7 @@ export function Comeback() {
         ATTENTION.
       </h2>
 
-      <p data-statement-2 className="display fluid-lg absolute px-4 text-center text-acid opacity-0">
+      <p data-statement-2 className="editorial fluid-lg absolute px-4 text-center text-acid-foreground opacity-0">
         WE CREATE IT.
       </p>
     </section>
