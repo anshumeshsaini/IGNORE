@@ -8,17 +8,14 @@ export function TechEcosystem() {
     <section className="border-t border-border py-20 lg:py-28 overflow-hidden bg-background">
       <div className="edge">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <p className="eyebrow text-acid font-mono flex items-center justify-center gap-2">
-            <Terminal className="size-3.5" />
-            // 05 / DIGITAL ARSENAL & SYSTEM PATTERNS
-          </p>
+
           <h2 className="display text-4xl sm:text-6xl md:text-7xl mt-3 tracking-tight leading-[0.9]">
             ENGINEERED BEAUTY.
             <br />
             <span className="text-acid">POWERED BY MODERN TECH.</span>
           </h2>
           <p className="mt-4 text-sm md:text-base text-muted-foreground leading-relaxed">
-            We merge brutalist creative art direction with cutting-edge software engineering. 
+            We merge brutalist creative art direction with cutting-edge software engineering.
             Explore our interactive 3D technology matrix and mathematical design patterns below.
           </p>
         </div>
@@ -30,7 +27,7 @@ export function TechEcosystem() {
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                   <div className="flex items-center gap-2">
-                    <Compass className="size-4 text-acid" />
+
                     <span className="text-xs font-mono font-bold tracking-wider">3D INTERACTIVE STACK CLOUD</span>
                   </div>
                   <span className="text-[10px] font-mono text-muted-foreground border border-border px-2 py-0.5 rounded">
@@ -59,7 +56,7 @@ export function TechEcosystem() {
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-border/50">
                   <div className="flex items-center gap-2">
-                    <Layers className="size-4 text-signal" />
+
                     <span className="text-xs font-mono font-bold tracking-wider">SPATIAL HEXAGON PATTERN ENGINE</span>
                   </div>
                   <span className="text-[10px] font-mono text-signal border border-signal/30 bg-signal/10 px-2 py-0.5 rounded">
