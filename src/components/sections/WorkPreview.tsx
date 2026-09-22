@@ -33,7 +33,7 @@ export function WorkPreview() {
               data-cursor="view"
               className="group block"
             >
-              <div className={`relative overflow-hidden bg-muted ${i % 2 ? "aspect-[4/5]" : "aspect-[16/11]"}`}>
+              <div className={`velocity-lean relative overflow-hidden bg-muted ${i % 2 ? "aspect-[4/5]" : "aspect-[16/11]"}`}>
                 <img
                   src={imgs[i % imgs.length]}
                   alt={`${p.name} — ${p.industry} case study preview`}

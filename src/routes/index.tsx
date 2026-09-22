@@ -2,20 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteFrame } from "@/components/SiteFrame";
 import { Hero } from "@/components/sections/Hero";
 import { Stats } from "@/components/sections/Stats";
-import { GlobalReach } from "@/components/sections/GlobalReach";
 import { Comeback } from "@/components/sections/Comeback";
 import { ServicesList } from "@/components/sections/ServicesList";
-import { WorkflowEngine } from "@/components/sections/WorkflowEngine";
 import { WorkPreview } from "@/components/sections/WorkPreview";
-import { TechEcosystem } from "@/components/sections/TechEcosystem";
 import { AboutBlock } from "@/components/sections/AboutBlock";
 import { VideoSection } from "@/components/sections/VideoSection";
-import { ModernInteractiveSuite } from "@/components/sections/ModernInteractiveSuite";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Marquee } from "@/components/sections/Marquee";
 import { Newsletter } from "@/components/sections/Newsletter";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 import { CampaignGrid } from "@/components/sections/CampaignGrid";
+import { EditorialMonolith } from "@/components/sections/EditorialMonolith";
 import { SignalStrip } from "@/components/sections/SignalStrip";
 import { site } from "@/lib/site";
 
@@ -41,21 +38,18 @@ function Index() {
     <SiteFrame>
       <h1 className="sr-only">{site.name} — creative and performance studio</h1>
       <Hero />
-
+      <SignalStrip />
       <CampaignGrid />
+      <EditorialMonolith />
       <Stats />
-      <GlobalReach />
       <Comeback />
       <ServicesList />
-      <WorkflowEngine />
       <SignalStrip />
       <WorkPreview />
-      <TechEcosystem />
       <VideoSection />
       <AboutBlock />
-
       <Testimonials />
-
+      <Marquee />
       <Newsletter />
       <FinalCTA />
     </SiteFrame>
